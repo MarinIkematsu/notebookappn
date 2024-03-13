@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Note</title>
+</head>
+<body>
+    <h3>新規作成</h3>
+    <h5>日付： <span th:text="${date}"></span></h5> <!-- 受け取った日付を表示 -->
+    <h5>では日記を書きましょう！</h5>
+    <form th:action="@{/notes/my/note_save}" method="post" th:object="${noteModel}">
+        <input type="hidden" name="note_date" th:value="${date}" />
+        <div>
+            <label for="title">タイトル</label>
+            <input type="text" id="title" name="title" th:field="*{title}" required>
+        </div>
+        <div>
+            <label for="content">本文</label>
+            <textarea id="content" name="content" th:field="*{content}" required></textarea> <!-- タグを閉じるのを追加 -->
+        </div>
+        
+        <button type="submit">追加</button>
+    </form>
+    <p></p>
+    <a href="/notes/my">戻る</a>
+</body>
+</html>
+
+

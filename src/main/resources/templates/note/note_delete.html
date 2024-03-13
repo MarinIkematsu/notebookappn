@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>削除</title>
+</head>
+<body>
+    <h1>削除</h1>
+    <p>本当にこの日記を削除しますか？</p>
+    <form action="/notes/{id}/delete" method="post">
+        <input type="submit" value="削除する">
+    </form>
+    <a href="/notes">TOPへ戻る</a>
+</body>
+</html>
