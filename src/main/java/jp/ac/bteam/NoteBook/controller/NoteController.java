@@ -3,8 +3,10 @@ package jp.ac.bteam.NoteBook.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.ac.bteam.NoteBook.models.DateModel;
 import jp.ac.bteam.NoteBook.models.NoteModel;
+import jp.ac.bteam.NoteBook.models.UserModel;
 import jp.ac.bteam.NoteBook.service.DateService;
 import jp.ac.bteam.NoteBook.service.NoteService;
 
@@ -25,8 +28,7 @@ public class NoteController {
 	
 	@Autowired
     private DateService dateService;
-
-    @Autowired
+	
     public NoteController(NoteService noteService, DateService dateService) {
         this.noteService = noteService;
         this.dateService = dateService;
@@ -41,45 +43,48 @@ public class NoteController {
 
     // ログイン中のユーザーの日記の日付一覧表示
     @GetMapping("/my")
-    public String getUserDates(Model model) {
-        Long userId = 123L; // 仮のログインユーザーID
-        List<DateModel> userDates = dateService.getUserDates(userId);
+    public String getUserDates(Model model,DateModel dateId) {
+        List<DateModel> userDates = dateService.getUserDates(dateId);
         model.addAttribute("userDates", userDates);
         return "note/my_note"; // HTMLテンプレート名
     }
     // ログイン中のユーザーの日記の新規追加
     // 作成する日記の日付を選択します
     @GetMapping("/my/date_create")
-    public String showCreateNotePage(Model model) {
+    public String showCreateDateForm(Model model) {
         model.addAttribute("dateModel", new DateModel());
         return "note/date_create"; // 日付選択ページのテンプレート名
     }
     // 選択した日付をsaveして日記の内容を作成するページにも持っていく
-
-    
-    // 選択した日付の日記の内容を書きます
-    @GetMapping("/my/note_create")
-    public String showCreateNoteForm(Model model) {
-        model.addAttribute("noteModel", new NoteModel());
+    @PostMapping("/my/date_create")
+    public String saveDate(Model model, @ModelAttribute DateModel dateModel, @AuthenticationPrincipal UserModel loginUser) {
+    	DateModel saveModel = dateService.saveDate(dateModel,loginUser);
+    	NoteModel noteModel = new NoteModel();
+    	noteModel.setDateId(saveModel);
+        model.addAttribute("noteModel", noteModel);
         return "note/note_create"; // 日記作成ページのテンプレート名
     }
     // 選択した日付➡作成した日記をsaveしてmyにリダイレクトします
-    
+    @PostMapping("/my/note_create")
+    public String saveNote(Model model, @ModelAttribute("noteModel") @Validated NoteModel noteModel,@AuthenticationPrincipal DateModel dateId) {
+    	NoteModel saveModel = noteService.saveNote(noteModel, dateId);
+        return "redirect:/notes/my";
+    }
 
 
-    // userIdとdateIdに一致する日記の詳細表示
+    // 日記の詳細表示
     @GetMapping("/{noteId}")
-    public String showNoteDetail(@PathVariable Long dateId,Long userId, Model model) {
-        List<NoteModel> note = noteService.getNoteByDateIdUserId(dateId, userId);
+    public String showNoteDetail(@PathVariable Long noteId, Model model) {
+        NoteModel note = noteService.getNoteByNoteId(noteId);
         model.addAttribute("note", note);
-        return "note/note_detail"; // HTMLテンプレート名
+        return "note/note_detail";
     }
 
     
     // 日記の編集
     @GetMapping("/{noteId}/edit")
-    public String showEditNoteForm(@PathVariable Long dateId,Long userId, Model model) {
-        List<NoteModel> note = noteService.getNoteByDateIdUserId(dateId, userId);
+    public String showEditNoteForm(@PathVariable Long noteId, Model model) {
+        NoteModel note = noteService.getNoteByNoteId(noteId);
         model.addAttribute("note", note);
         return "note/note_edit"; // HTMLテンプレート名
     }

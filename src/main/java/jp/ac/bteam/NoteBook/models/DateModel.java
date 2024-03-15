@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -20,17 +22,18 @@ public class DateModel {
     @Column(name = "date_id")
     private Long dateId;
 
-    @Column(name = "user_id")
-    private Long userId;
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserModel userId;
+    
     @Column(name = "note_date")
     private LocalDate noteDate;
 
     @Column(name = "create_at")
-    private Date createdAt;
+    private Date createAt;
 
     @Column(name = "update_at")
-    private Date updatedAt;
+    private Date updateAt;
 
     @Column(name = "delete_at")
     private Date deleteAt;

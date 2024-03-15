@@ -1,34 +1,31 @@
 package jp.ac.bteam.NoteBook.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jp.ac.bteam.NoteBook.models.DateModel;
 import jp.ac.bteam.NoteBook.models.NoteModel;
 import jp.ac.bteam.NoteBook.repository.NoteRepository;
 
 @Service
 public class NoteService {
+	@Autowired
+    private NoteRepository noteRepository;
 
-    private final NoteRepository noteRepository;
-
-    @Autowired
-    public NoteService(NoteRepository noteRepository) {
-        this.noteRepository = noteRepository;
-    }
-
-
-    // userIdとdateIdに一致する日記の詳細を取得
-    public List<NoteModel> getNoteByDateIdUserId(Long dateId, Long userId) {
-        return noteRepository.findByDateIdAndUserId(dateId, userId);
+    // 日記の詳細を取得
+    public NoteModel getNoteByNoteId(Long noteId) {
+        return noteRepository.findNoteByNoteId(noteId);
     }
     
     
     // 新規日記の追加
-    public NoteModel saveNote(NoteModel noteModel) {
-        return noteRepository.save(noteModel);
-    }
+    public NoteModel saveNote(NoteModel noteModel, DateModel dateId) {
+    	NoteModel newNote = new NoteModel();
+        newNote.setTitle(noteModel.getTitle());
+        newNote.setContent(noteModel.getContent());
+        noteModel.setDateId(dateId);
+		return noteRepository.save(newNote);
+	}
 
 
     // 日記の編集　（未完成）

@@ -7,5 +7,7 @@ import jp.ac.bteam.NoteBook.models.UserModel;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserModel, Long> {
+
+	UserModel findByUsernameEquals(String username);
 }
 

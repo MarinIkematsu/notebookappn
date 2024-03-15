@@ -1,7 +1,6 @@
 CREATE TABLE `Notes` (
 	`note_id` SERIAL NOT NULL,
 	`date_id` BIGINT(16) NOT NULL,
-	`user_id` BIGINT(16) NOT NULL,
 	`title` VARCHAR(128) NOT NULL,
 	`content` TEXT NOT NULL,
 	`create_at` DATETIME,

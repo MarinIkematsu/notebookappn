@@ -27,10 +27,6 @@ public class NoteModel {
     @JoinColumn(name = "date_id")
     private DateModel dateId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserModel userId;
-
     @Column(name = "title", length = 128, nullable = false)
     private String title;
 
@@ -38,10 +34,10 @@ public class NoteModel {
     private String content;
 
     @Column(name = "create_at")
-    private Date createdAt;
+    private Date createAt;
 
     @Column(name = "update_at")
-    private Date updatedAt;
+    private Date updateAt;
 
     @Column(name = "delete_at")
     private Date deleteAt;
