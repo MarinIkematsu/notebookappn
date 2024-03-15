@@ -66,8 +66,8 @@ public class NoteController {
     }
     // 選択した日付➡作成した日記をsaveしてmyにリダイレクトします
     @PostMapping("/my/note_create")
-    public String saveNote(Model model, @ModelAttribute("noteModel") @Validated NoteModel noteModel,@AuthenticationPrincipal DateModel dateId) {
-    	NoteModel saveModel = noteService.saveNote(noteModel, dateId);
+    public String saveNote(Model model, @ModelAttribute("noteModel") @Validated NoteModel noteModel, @AuthenticationPrincipal UserModel loginUser) {
+    	noteService.saveNote(noteModel); // 日記を保存
         return "redirect:/notes/my";
     }
 
